@@ -38,7 +38,7 @@ public class GreetingController implements DisposableBean {
 
     private final AtomicLong counter = new AtomicLong();
     private Shado shado;
-    DateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmssZ");
+    DateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");
     Date date = new Date();
     MongoClientURI mUri = null;
     MongoClient mongoClient = null;
