@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #taskRecordTable td:nth-child(3n) {
+          border-left: 1px black solid;
+        }
+        th input {
+          padding: 3px;
+        }
+        .arc text {
+          font: 10px sans-serif;
+          text-anchor: middle;
+        }
+
+        .arc path {
+          stroke: #fff;
+        }
+        div.tooltip {
+            position: absolute;
+            text-align: left;
+            padding: 10px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        h3.subtitle {
+            padding: 20px 80px 0px;
+        }
+
+        div.modal-dialog.modal-lg {
+            max-width: 1000px;
+        }
+
+        #replication {
+            margin-left: 20px;
+            width: 100%;
+        }
+
+        #replication label {
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        #replication span {
+            width: 50px;
+            display: inline-block;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 300px;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+            vertical-align: middle;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        #boxSVG,
+        #boxSVG2,
+        #boxSVG3 {
+            padding-left: 50px;
+        }
+        #taskRecordTable {
+            table-layout: fixed;
+            word-break: normal;
+        }
+        #taskRecordTable input {
+            width: 100%;
+        }
+    </style>
+    <!-- Bootstrap 4.0.0 libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.min.js" integrity="sha256-45YA33UQCDcJsntBst2bhka2t/LBNHP7RNvpllHPkQ0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js" integrity="sha256-OI3N9zCKabDov2rZFzl8lJUXCcP7EmsGcGoP6DMXQCo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js" integrity="sha256-eOUokb/RjDw7kS+vDwbatNrLN8BIvvEhlLM5yogcDIo=" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="../script/d3pie.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+
+</head>
+
+<body>
+    <h3 class='subtitle mb-5'>Failed Task Analysis</h3>
+
+    <div id="pieChart"></div>
+    <div class="ml-5 mr-5 mb-5 mt-5">
+        <table id="taskRecordTable" class="display" width="100%">
+            <thead>
+                <tr>
+                    <th width="15%"><input data-column="0" type="text" placeholder="Search Op Team" /></th>
+                    <th width="15%"><input data-column="1" type="text" placeholder="Search Task Name" /></th>
+                    <th width="" colspan="3">Missed Tasks</th>
+                    <th width="" colspan="3">Incomplete Tasks</th>
+                    <th width="" colspan="3">Failed Tasks and Not Caught</th>
+                    <th width="" colspan="3">Failed Tasks and Caught</th>
+                </tr>
+                <tr>
+                    <th>Operator Team</th>
+                    <th>Task Name</th>
+                    <th class="left-border right-align" >Count</th>
+                    <th class="right-align">Avg.</th>
+                    <th class="right-align">Std. Dev.</th>
+                    <th class="left-border right-align" >Count</th>
+                    <th class="right-align">Avg.</th>
+                    <th class="right-align">Std. Dev.</th>
+                    <th class="left-border right-align" >Count</th>
+                    <th class="right-align">Avg.</th>
+                    <th class="right-align">Std. Dev.</th>
+                    <th class="left-border right-align" >Count</th>
+                    <th class="right-align">Avg.</th>
+                    <th class="right-align">Std. Dev.</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <script src='../result.js'></script>
+    <script>
+        FailedTaskAnalysis.analyze("TaskRecord.json", "pieChart", "#taskRecordTable");
+    </script>
+
+</body>
+
+</html>

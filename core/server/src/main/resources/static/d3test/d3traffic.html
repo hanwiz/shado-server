@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        h3.subtitle {
+            padding: 20px 80px 0px;
+        }
+    </style>
+    <!-- Bootstrap 4.0.0 libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.min.js" integrity="sha256-45YA33UQCDcJsntBst2bhka2t/LBNHP7RNvpllHPkQ0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js" integrity="sha256-OI3N9zCKabDov2rZFzl8lJUXCcP7EmsGcGoP6DMXQCo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js" integrity="sha256-eOUokb/RjDw7kS+vDwbatNrLN8BIvvEhlLM5yogcDIo=" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="../result.js"></script>
+
+</head>
+
+<body>
+    <h3 class='subtitle'>Traffic Levels</h3>
+
+    <div class='ml-5'>
+        <button type="button" class="btn btn-primary" onClick="randomize()">Randomize</button>
+    </div>
+
+    <svg id="trafficLevel" width="400" height="300"></svg>
+    <script>
+        var trafficLevels = ["h", "l", "m", "m", "m", "l", "m", "h", "l"];
+
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min) ) + min;
+        }
+
+        function randomize() {
+            trafficLevels = [];
+
+            var hours = getRndInteger(1, 25);
+            var levels = [ "l", "m", "h"];
+            for(var i=0; i<hours; i++) {
+                var x = getRndInteger(0, 3);
+                trafficLevels[i] = levels[x];
+            }
+
+            console.log(trafficLevels);
+
+            TrafficLevelBarChart.drawTrafficLevelBarChart("#trafficLevel", trafficLevels, true);
+        }
+
+        TrafficLevelBarChart.drawTrafficLevelBarChart("#trafficLevel", trafficLevels, true);
+    </script>
+
+</body>
+
+</html>
